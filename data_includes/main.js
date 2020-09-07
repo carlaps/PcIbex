@@ -1,15 +1,15 @@
-PennController.ResetPrefix(null) // Shorten command names (keep this line here)
-PennController.CheckPreloaded()
-PennController.DebugOff()
+PennController.ResetPrefix(null), // Shorten command names (keep this line here)
+PennController.CheckPreloaded(),
+PennController.DebugOff(),
 
-Sequence("intro", "explicacion", "instrucciones", "practica_spanish", "empezar", 
+Sequence("intro", "explicacion", "instructions", "practica2", "start", "Experimento_ingles_level_1", "level_1", 
+"Experimento_ingles_level_2", "level_2", "Experimento_ingles_level_3", "level_3", 
+"Experimento_ingles_level_4", "level_4",
 
+"instrucciones", "practica_spanish", "empezar", 
 "Experimento_espanol_nivel_1", "nivel_1", "Experimento_espanol_nivel_2", "nivel_2", 
 "Experimento_espanol_nivel_3", "nivel_3", "Experimento_espanol_nivel_4", "nivel_4", 
-
-"instructions", "practica2", "start", "Experimento_ingles_level_1", "level_1", 
-"Experimento_ingles_level_2", "level_2", "Experimento_ingles_level_3", "level_3", 
-"Experimento_ingles_level_4", "level_4", SendResults(), "Continuacion") 
+SendResults(), "Continuacion") 
 
 ,
 // What is in Header happens at the beginning of every single trial
@@ -24,22 +24,22 @@ Header(
 ,
 // This log command adds a column reporting the participant's name to every line saved to the results
 newTrial("intro" ,
-    newText("Universidad Autonoma de Queretaro")
+    newText("Universidad Aut&oacute;noma de Quer&eacute;taro")
         .settings.css("color","white")
         .settings.css("font-size", "80px")
         .print()
     ,
-    newText("Estas invitado/a a participar de manera voluntaria a un estudio de vocabulario.")
+    newText("Est&aacute;s invitado/a a participar de manera voluntaria a un estudio de vocabulario.")
         .settings.css ("color","white")
         .settings.css("font-size", "30px")
         .print()
     ,
-    newText("Esto no es un examen. La informacion es estrictamente confidencial.")
+    newText("Esto no es un examen. La informaci&oacute;n es estrictamente confidencial.")
         .settings.css("color", "white")
         .settings.css("font-size", "30px")
         .print()
     ,
-    newText("Nos interesa saber sobre el vocabulario. Si estas de acuerdo en continuar, escribe tu nombre.")
+    newText("Nos interesa saber sobre el vocabulario. Si est&aacute;s de acuerdo en continuar, escribe tu nombre en el espacio y haz click en el bot&oacute;n para empezar.")
         .settings.css ("color","white")
         .settings.css("font-size", "30px")
         .print()
@@ -67,19 +67,24 @@ newTrial("intro" ,
         .print()
         
     ,
-    newText("El experimento consiste en 2 partes. Esta primera parte se trata de resolver multiplicaciones basicas en espanol e ingles, primero sera en un idioma y despues en otro. Intenta responder lo mas rapido que puedas.")
+    newText("Antes de empezar revisa que tus bocinas tengan buen volumen. &#191Listo?")
         .settings.css ("color","white")
         .settings.css("font-size", "30px")
         .print()
     
     ,
-    newText("text")
-        .settings.css ("color","black")
+    newText(" ")
+        .settings.css("color","black")
+        .settings.css("font-size", "30px")
+        .print()
+        ,
+    newText("El experimento consiste en 2 partes. Esta primera parte se trata de resolver multiplicaciones b&aacute;sicas en espa&ntildeol e ingl&eacute;s, primero ser&aacute; en un idioma y despu&eacute;s en otro. Intenta responder lo m&aacute;s r&aacute;pido que puedas.")
+        .settings.css ("color","white")
         .settings.css("font-size", "30px")
         .print()
         ,
         
-    newText("Gracias por tu participacion y diviertete!")
+    newText("&#161Gracias por tu participaci&oacute;n y divi&eacute;rtete!")
         .settings.css ("color","white")
         .settings.css("font-size", "30px")
         .print()
@@ -150,22 +155,31 @@ Template("Practica_Espanol_ButtonNormal-1.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-	newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+	 newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
-      ,
-    newTimer(300) .start() .wait() 
     ,
-
-     getText("num")
-     .remove()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")   
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
+         
     ,
-   
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer   )	
-     .log( "ID" , getVar("ID")   
+    newTimer("exposure", 300).start().wait() 
+    ,
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+       
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")   
 ))
 ,
 
@@ -204,20 +218,29 @@ Template(  "Math_Spanish_Level_1_2_Bloque1.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")   
 ))
 ,
 
@@ -225,6 +248,10 @@ Template(  "Math_Spanish_Level_1_2_Bloque1.csv" ,
   newImage("M_S_nivel_1","Math_Spanish_Level_1.jpg")
             .size(850,450)
             .print()
+    ,
+
+    newAudio ("Level_Up", "chipquest.mp3")
+    .play()
     ,
     newKey(" ")
     .wait()
@@ -256,20 +283,29 @@ Template(  "Math_Spanish_Level_3_4_Bloque2.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")
 ))
 ,
 
@@ -283,7 +319,7 @@ Template(  "Math_Spanish_Level_3_4_Bloque2.csv" ,
     ,
     getImage("M_S_nivel_2")
     .remove()
-)
+))
 ,
 
 // Experimento_espanol_nivel 3
@@ -308,20 +344,29 @@ Template(  "Math_Spanish_Level_5_6_Bloque3.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")
 ))
 ,
 
@@ -360,20 +405,29 @@ Template(  "Math_Spanish_Level_7_8_Bloque4.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")
 ))
 ,
     newTrial( "nivel_4",
@@ -439,22 +493,29 @@ Template("Practica_Ingles_ButtonNormal-1.csv" ,
         .remove()
     ,
         
-	newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+	 newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait() 
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer   )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID") 
 ))
 ,
 newTrial( "start",
@@ -492,26 +553,35 @@ Template(  "Math_English_Level_1_2_Bloque1.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")  
 ))
 ,
 
 
      newTrial( "level_1",
-  newImage("M_E_level_1","Math_English_Level_1.jpg")
+  newImage("M_E_level_1","Math_English_Level1.jpg")
             .size(850,450)
             .print()
     ,
@@ -546,20 +616,29 @@ Template(  "Math_English_Level_3_4_Bloque2.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")
 ))
 ,
 
@@ -598,20 +677,29 @@ Template(  "Math_English_Level_5_6_Bloque3.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")
 ))
 ,
 
@@ -650,20 +738,29 @@ Template(  "Math_English_Level_7_8_Bloque4.csv" ,
     getImage("fixationpoint")
         .remove()
     ,
-    newText("num", row.Solution)
-        .settings.css ("color","white")
-        .settings.css("font-size", "200px")
+     newText("num", row.Solution)
+        .css("color","white")
+        .css("font-size", "200px")
         .print()
     ,
-    newTimer(350) .start() .wait()
+    newKey("pressOnArrow", "ArrowLeft", "ArrowRight")
+        .log("all")
+        .callback( 
+            getTimer("exposure").stop(),
+            getTimer("timeout").stop()
+        )
     ,
-     getText("num")
-     .remove()
+    newTimer("exposure", 300).start().wait() 
     ,
-     newKey("pressOnArrow", "ArrowLeft", "ArrowRight") .log() .callback( getTimer 
-("timeout").stop() ).log("all") , newTimer("timeout", 5000).start().log().wait() , getKey 
-("pressOnArrow") .disable() ) .log( "Correct_answer"  , row.Correct_answer     )	
-     .log( "ID" , getVar("ID")   
+    getText("num").remove()
+    ,
+    getKey("pressOnArrow").test.pressed()
+        .failure( newTimer("timeout", 5000).start().log().wait() )
+    ,
+    getKey("pressOnArrow").disable()
+)
+.log( "Correct_answer"  , row.Correct_answer   )	
+.log( "ID" , getVar("ID")
 ))
 ,
 
@@ -680,24 +777,23 @@ Template(  "Math_English_Level_7_8_Bloque4.csv" ,
 )
 ,
     newTrial("Continuacion" ,
-    newText("Muy bien! Aqui ha terminado la primera parte. Por favor, haz click en el siguiente enlace para empezar la segunda parte cuando estes listo.")
+    newText("&#161Muy bien!")
         .settings.css("color","white")
         .settings.css("font-size", "80px")
+        .print()
+    ,
+    newText("Aqu&iacute; ha terminado la primera parte. Por favor, haz click en el siguiente enlace para empezar la segunda parte cuando est&eacute;s listo.")
+        .settings.css("color","white")
+        .settings.css("font-size", "30px")
         .print()
     ,
     newText(" ")
         .settings.css("color","white")
-        .settings.css("font-size", "80px")
+        .settings.css("font-size", "30px")
         .print()
-    ,
-    newText(" ")
-        .settings.css("color","white")
-        .settings.css("font-size", "80px")
+        ,
+    newHtml("myHtml", "segundo.html")
+
         .print()
-    ,
-    newText("https://expt.pcibex.net/ibexexps/carlap/Digitos2/experiment.html")
-        .settings.css("color","white")
-        .settings.css("font-size", "80px")
-        .print()
-))
-    
+        .wait()
+        ))
